@@ -11,6 +11,9 @@ def fetch_task(file_name):
     print(file_name, "in")
     wb = load_workbook(file_name)
     ws = wb.active
+    col_len = len(list(ws.columns))
+    ws.insert_cols(col_len, 5)
+
     rows = ws.iter_rows()
     title_row = next(rows)
     title_row[5].value = "价格众数"
