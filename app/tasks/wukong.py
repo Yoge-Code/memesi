@@ -27,7 +27,7 @@ def load_data(playwright, keyword="", max_page=30, headless=True):
     # ---------------------
     time.sleep(1)
     try:
-        page.wait_for_selector("[id=\"goods_list\"]")
+        page.wait_for_selector("[id=\"goods_list\"]", timeout=3000)
         for i in range(max_page):
             time.sleep(1)
             page.press("[placeholder=\"请输入关键词\"]", "PageDown")
