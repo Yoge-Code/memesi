@@ -10,7 +10,7 @@ from playwright.sync_api import sync_playwright
 
 
 def load_data(playwright, keyword="", max_page=30, headless=True):
-    browser = playwright.firefox.launch(headless=headless)
+    browser = playwright.chromium.launch(headless=headless)
     context = browser.new_context()
     # Open new page
     page = context.new_page()
@@ -40,6 +40,7 @@ def load_data(playwright, keyword="", max_page=30, headless=True):
     finally:
         context.close()
         browser.close()
+
 
 def parse_raw_data(raw_data):
     raw = raw_data.strip().split("呼叫")
