@@ -10,7 +10,7 @@ from playwright.sync_api import sync_playwright
 
 
 def load_data(playwright, keyword="", max_page=30, headless=True):
-    browser = playwright.chromium.launch(headless=headless)
+    browser = playwright.firefox.launch(headless=headless)
     context = browser.new_context()
     # Open new page
     page = context.new_page()
@@ -28,18 +28,18 @@ def load_data(playwright, keyword="", max_page=30, headless=True):
     time.sleep(1)
     try:
         page.wait_for_selector("[id=\"goods_list\"]")
+        for i in range(max_page):
+            time.sleep(1)
+            page.press("[placeholder=\"请输入关键词\"]", "PageDown")
+        ele = page.wait_for_selector("[id=\"goods_list\"]")
+        tc = ele.text_content()
+        return tc
     except:
         print(keyword, "超时,可能无数据")
         return ""
-
-    for i in range(max_page):
-        time.sleep(1)
-        page.press("[placeholder=\"请输入关键词\"]", "PageDown")
-    ele = page.wait_for_selector("[id=\"goods_list\"]")
-    tc = ele.text_content()
-    context.close()
-    browser.close()
-    return tc
+    finally:
+        context.close()
+        browser.close()
 
 def parse_raw_data(raw_data):
     raw = raw_data.strip().split("呼叫")
