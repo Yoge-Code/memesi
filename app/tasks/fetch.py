@@ -13,6 +13,7 @@ fetch_task_key = "fetch_task_key"
 def fetch_task(file_name):
     print(file_name, "in")
     if not rdb.setnx(fetch_task_key, file_name):
+        rdb.expire(fetch_task_key, 3600*3)
         return False, "处理中..."
 
     wb = load_workbook(file_name)

@@ -26,11 +26,11 @@ templates = Jinja2Templates(directory="templates")
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
     file_name = rdb.get(fetch_task_key)
-    if file_name:
+    if not file_name:
         msg = "（文件第三列放商品名称，不能出现空行）上传要查询的文件: "
     else:
-        down_load_url = str(request.base_url) + file_name
-        msg = "有任务处理中, 按此链接下载{}".format(down_load_url)
+        down_load_url = str(request.base_url) + file_name.decode()
+        msg = "有任务处理中, 稍后可按此链接下载:{}".format(down_load_url)
     return templates.TemplateResponse("index.html", {"request": request, "message": msg})
 
 
