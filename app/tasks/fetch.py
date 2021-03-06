@@ -5,10 +5,16 @@
 
 from openpyxl import load_workbook
 from .wukong import fetch_product_price_stat
+from app.ext import rdb
+
+fetch_task_key = "fetch_task_key"
 
 
 def fetch_task(file_name):
     print(file_name, "in")
+    if not rdb.setnx(fetch_task_key, file_name):
+        return False, "处理中..."
+
     wb = load_workbook(file_name)
     ws = wb.active
     col_len = len(list(ws.columns))
@@ -46,5 +52,7 @@ def fetch_task(file_name):
             row[5].value = "系统错误，请联系我"
     wb.save(file_name)
     print("done!" ,file_name)
+    rdb.delete(fetch_task_key)
+    return True, ""
 
 
